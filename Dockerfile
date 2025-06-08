@@ -16,3 +16,12 @@ EXPOSE 8000
 
 # Command to start FastAPI application
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+
+
+
+
+
+
+# docker build -t apurba1903/insurance-premium-api:latest .
+# docker login
+# docker push apurba1903/insurance-premium-api:latest
