@@ -88,19 +88,39 @@ if st.button("🔮 Predict Premium Category"):
                 response = requests.post(API_URL, json=input_data)
                 
             if response.status_code == 200:
-                result = response.json()
+                result = response.json()['response']  # Access nested 'response' object
                 category = result['predicted_category']
+                confidence = result['confidence']
+                probabilities = result['class_probabilities']
                 
                 # Display result with appropriate styling
+                st.write("")  # Add some space
+                st.write("")
+
                 if str(category).lower() == 'low':
-                    st.success(f"✅ **Predicted Premium Category: {category.upper()}**")
-                    st.info("💡 Great! You qualify for lower premium rates.")
+                    st.success(f"## ✅ **Predicted Premium Category: {category.upper()}**")
+                    st.success(f"### 🎯 Confidence: {confidence:.0%}")
+                    st.write("")
+                    st.info("### 💡 Great! You qualify for lower premium rates.")
                 elif str(category).lower() == 'medium':
-                    st.warning(f"⚠️ **Predicted Premium Category: {category.upper()}**")
-                    st.info("💡 You fall into the standard premium range.")
+                    st.warning(f"## ⚠️ **Predicted Premium Category: {category.upper()}**")
+                    st.warning(f"### 🎯 Confidence: {confidence:.0%}")
+                    st.write("")
+                    st.info("### 💡 You fall into the standard premium range.")
                 else:
-                    st.error(f"🔴 **Predicted Premium Category: {category.upper()}**")
-                    st.info("💡 Your profile indicates higher premium rates.")
+                    st.error(f"## 🔴 **Predicted Premium Category: {category.upper()}**")
+                    st.error(f"### 🎯 Confidence: {confidence:.0%}")
+                    st.write("")
+                    st.info("### 💡 Your profile indicates higher premium rates.")
+
+                st.write("")  # Add space after
+                st.write("")
+                
+                # Display additional probability information
+                st.write("### 📊 Detailed Probability Breakdown")
+                st.write("**Class Probabilities:**")
+                for class_name, prob in probabilities.items():
+                    st.progress(prob, text=f"{class_name}: {prob:.1%}")
                     
             else:
                 st.error(f"❌ API Error: {response.status_code} - {response.text}")
